@@ -15,7 +15,7 @@ class Size(models.Model):
 
     def __str__(self):
         """Unicode representation of Size."""
-        return str(self.size)
+        return f'{self.size}-{self.price}'
 
 
 class Product(models.Model):
