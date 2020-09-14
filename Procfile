@@ -1,0 +1,1 @@
+web: gunicorn lamelo.wsgi --log-file - 

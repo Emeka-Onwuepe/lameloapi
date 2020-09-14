@@ -1,0 +1,43 @@
+from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer, OrderedProductSerializer,
+                         CustomerSerializer, OrderSerializer)
+from .models import Size, Product, Category, OrderedProduct, Customer, Order
+from rest_framework.response import Response
+from rest_framework import generics
+
+
+class GetProducts(generics.GenericAPIView):
+    serializer_class = ProductSerializer
+
+    def get(self, request, *args, **kwargs):
+        action = request.data["action"]
+
+        if action == "bfw":
+            wants = ["burgers", "fries", "wings"]
+            returned = []
+            for item in wants:
+                cat = Category.objects.get(name=item)
+                size = Size.objects.filter(multiplesizes__category__id=cat.id)
+                pureList = list(dict.fromkeys(size))
+                prices = SizeSerializer(pureList, many=True)
+                products = ProductSerializer(cat.products, many=True)
+                returned.append({item: products.data, "prices": prices.data})
+            return Response(returned)
+        else:
+            cat = Category.objects.get(name=action)
+            product = cat.products
+            size = Size.objects.filter(multiplesizes__category__id=cat.id)
+            pureList = list(dict.fromkeys(size))
+            prices = SizeSerializer(pureList, many=True)
+            products = ProductSerializer(product, many=True)
+            return Response({action: products.data, "prices": prices.data})
+
+
+class GetProduct(generics.GenericAPIView):
+    serializer_class = ProductSerializer
+
+    def get(self, request, *args, **kwargs):
+        product = Product.objects.get(id=int(request.data["id"]))
+        size = Size.objects.filter(multiplesizes__id=product.id)
+        prices = SizeSerializer(size, many=True)
+        products = ProductSerializer(product)
+        return Response({product.name: products.data, "prices": prices.data})
