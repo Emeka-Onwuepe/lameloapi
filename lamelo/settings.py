@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY_4")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://lameloapi.herokuapp.com"]
 
 
 # Application definition
@@ -64,12 +64,12 @@ REST_KNOX = {
 }
 
 
-CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:3000",
-                         "http://localhost:3000", "http://*"]
+CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

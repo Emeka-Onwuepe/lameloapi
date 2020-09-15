@@ -8,7 +8,7 @@ from rest_framework import generics
 class GetProducts(generics.GenericAPIView):
     serializer_class = ProductSerializer
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         action = request.data["action"]
 
         if action == "bfw":
