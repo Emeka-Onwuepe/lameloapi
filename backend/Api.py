@@ -35,7 +35,7 @@ class GetProducts(generics.GenericAPIView):
 class GetProduct(generics.GenericAPIView):
     serializer_class = ProductSerializer
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         product = Product.objects.get(id=int(request.data["id"]))
         size = Size.objects.filter(multiplesizes__id=product.id)
         prices = SizeSerializer(size, many=True)
