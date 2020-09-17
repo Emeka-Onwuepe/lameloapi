@@ -40,4 +40,4 @@ class GetProduct(generics.GenericAPIView):
         size = Size.objects.filter(multiplesizes__id=product.id)
         prices = SizeSerializer(size, many=True)
         products = ProductSerializer(product)
-        return Response({product.name: products.data, "prices": prices.data})
+        return Response({"product": products.data, "prices": prices.data})
