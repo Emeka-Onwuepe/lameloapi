@@ -46,7 +46,7 @@ class Category(models.Model):
 
     name = models.CharField(verbose_name="name", max_length=150)
     products = models.ManyToManyField(
-        Product, verbose_name="products", blank=True)
+        Product, verbose_name="products", related_name="catproduct", blank=True)
 
     class Meta:
         """Meta definition for Category."""
