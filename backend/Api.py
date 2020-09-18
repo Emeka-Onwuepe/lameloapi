@@ -21,7 +21,7 @@ class GetProducts(generics.GenericAPIView):
                 # prices = SizeSerializer(pureList, many=True)
                 products = ProductSerializer(cat.products, many=True)
                 # , "prices": prices.data
-                returned.append({item: products.data})
+                returned.append(products.data)
             return Response(returned)
         else:
             cat = Category.objects.get(name=action)
