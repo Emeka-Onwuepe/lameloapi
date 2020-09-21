@@ -13,15 +13,17 @@ class GetProducts(generics.GenericAPIView):
 
         if action == "bfw":
             wants = ["burgers", "fries", "wings"]
-            returned = []
+            productList = []
+            priceList = []
             for item in wants:
                 cat = Category.objects.get(name=item)
                 size = Size.objects.filter(multiplesizes__category__id=cat.id)
                 pureList = list(dict.fromkeys(size))
                 prices = SizeSerializer(pureList, many=True)
                 products = ProductSerializer(cat.products, many=True)
-                returned.append({item: products.data, "prices": prices.data})
-            return Response(returned)
+                productList.append(products.data)
+                priceList.append(prices.data)
+            return Response({"products": productList, "prices": priceList})
         else:
             cat = Category.objects.get(name=action)
             product = cat.products
@@ -29,7 +31,7 @@ class GetProducts(generics.GenericAPIView):
             pureList = list(dict.fromkeys(size))
             prices = SizeSerializer(pureList, many=True)
             products = ProductSerializer(product, many=True)
-            return Response({action: products.data, "prices": prices.data})
+            return Response({"products": products.data, "prices": prices.data})
 
 
 # class GetProduct(generics.GenericAPIView):
