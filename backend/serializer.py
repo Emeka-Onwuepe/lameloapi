@@ -32,8 +32,9 @@ class OrderedSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
+        customer = self.context.get("customer")
         order = Ordered.objects.create(
-            OrderId=validated_data["OrderId"], customer=validated_data["customer"], total=validated_data["total"])
+            OrderId=validated_data["OrderId"], customer=customer, total=validated_data["total"])
         order.save()
         return order
 
