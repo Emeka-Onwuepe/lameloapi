@@ -49,7 +49,8 @@ class OrderView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         updatedUser = serializer.save()
 
-        Ordered = OrderedSerializer(data=request.data['Ordered'], context={"customer": updatedUser.id})
+        Ordered = OrderedSerializer(data=request.data['Ordered'], context={
+                                    "customer": updatedUser})
         Ordered.is_valid(raise_exception=True)
         order = Ordered.save()
         Order = OrderedSerializer(order)
