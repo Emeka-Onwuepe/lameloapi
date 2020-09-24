@@ -43,7 +43,7 @@ class OrderedSerializer(serializers.ModelSerializer):
 class OrderedProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderedProduct
-        fields = ["id", "name", "brand",
+        fields = ["id", "name", "flavour",
                   "quantity", "price", "size", "product"]
 
     def create(self, validated_data):
