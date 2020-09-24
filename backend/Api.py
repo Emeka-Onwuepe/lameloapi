@@ -69,7 +69,7 @@ class OrderView(generics.GenericAPIView):
         productTable = f"{tableHead}{products}{tableFoot}"
         message = f"<p>You have a new order with the ID:<strong>{orderedData['OrderId']}</strong> and a total amount of <strong>&#x20A6; {orderedData['total']}</strong>.</p>"
         message += f"<p>The ordered Product(s) is/are as follows: <br/>{productTable}</p><p>{updatedUser} contact detail is as follows:<br/>"
-        message += f"Email: {updatedUser.email} <br/> Phone Number:{updatedUser.phone_number} <br/> Address:{updatedUser.address}</p>"
+        message += f"Email: {updatedUser.email} <br/> Phone Number:{updatedUser.phoneNumber} <br/> Address:{updatedUser.address}</p>"
         send_mail(f"New Order from {updatedUser}", "", "Peastan", [
                   emailReciever], fail_silently=False, html_message=message)
         return Response({"Ordered": Order.data})
