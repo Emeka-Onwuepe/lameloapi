@@ -29,7 +29,8 @@ class CustomerSerializer(serializers.ModelSerializer):
 class OrderedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ordered
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ["customer"]
 
     def create(self, validated_data):
         customer = self.context.get("customer")

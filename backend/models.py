@@ -75,7 +75,7 @@ class Customer(models.Model):
 
     def __str__(self):
         """Unicode representation of Customer."""
-        self.fullName
+        return self.fullName
 
 
 class Ordered(models.Model):
