@@ -50,8 +50,8 @@ class OrderedProductSerializer(serializers.ModelSerializer):
         purchaseId = self.context.get("purchaseId")
 
         Product = OrderedProduct.objects.create(name=validated_data["name"], flavour=validated_data["flavour"],
-                                                quantity=validated_data["quantity"], price=validated_data[
-                                                    "price"], size=validated_data["size"],
+                                                quantity=validated_data["quantity"], price=validated_data["price"],
+                                                size=validated_data["size"],
                                                 purchaseId=purchaseId, product=validated_data["product"])
         Product.save()
         return Product
