@@ -1,8 +1,10 @@
-from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer, OrderedProductSerializer,
-                         CustomerSerializer, OrderSerializer)
-from .models import Size, Product, Category, OrderedProduct, Customer, Order
+from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer,
+                         CustomerSerializer, OrderedSerializer, OrderedProductSerializer)
+from .models import Size, Product, Category, Customer, OrderedProduct, Ordered
 from rest_framework.response import Response
 from rest_framework import generics
+from django.core.mail import send_mail
+emailReciever = "pascalemy2010@gmail.com"
 
 
 class GetProducts(generics.GenericAPIView):
@@ -36,15 +38,37 @@ class GetProducts(generics.GenericAPIView):
             return Response({"products": products.data, "prices": prices.data})
 
 
-# class GetProduct(generics.GenericAPIView):
-#     serializer_class = ProductSerializer
+class OrderView(generics.GenericAPIView):
+    serializer_class = CustomerSerializer
 
-#     def post(self, request, *args, **kwargs):
-#         product = Product.objects.get(id=int(request.data["id"]))
-#         size = Size.objects.filter(multiplesizes__id=product.id)
-#         cat = Category.objects.get(products=product)
-#         pro = Product.objects.filter(products=cat.id).exclude(id=product.id)
-#         related = ProductSerializer(pro, many=True)
-#         prices = SizeSerializer(size, many=True)
-#         products = ProductSerializer(product)
-#         return Response({"product": products.data, "prices": prices.data, "related": related.data})
+    def post(self, request, *args, **kwargs):
+        userData = request.data['user']
+        orderedData = request.data['Ordered']
+        orderedProductData = request.data['OrderedProduct']
+        serializer = self.get_serializer(data=userData)
+        serializer.is_valid(raise_exception=True)
+        updatedUser = serializer.save()
+
+        Ordered = OrderedSerializer(data=request.data['Ordered'])
+        Ordered.is_valid(raise_exception=True)
+        order = Ordered.save()
+        Order = OrderedSerializer(order)
+        OrderedProduct = OrderedProductSerializer(
+            data=request.data['OrderedProduct'], many=True, context={"purchaseId": order})
+        OrderedProduct.is_valid(raise_exception=True)
+        orderedproduct = OrderedProduct.save()
+
+        # prepare and send email
+
+        tableHead = f'<table><thead><tr><th>Product Name</th><th>flavour</th><th>Size</th><th>Qty</th><th>Price</th></tr></thead>'
+        tableFoot = f'<tfoot><tr><td colspan="4">Total</td><td>&#x20A6; {orderedData["total"]}</td></tr></tfoot></table>'
+        products = ""
+        for item in orderedProductData:
+            products += f'<tr><td>{item["name"]}</td><td>{item["flavour"]}</td><td>{item["size"]}</td><td>{item["quantity"]}</td><td>&#x20A6; {item["price"]}</td></tr>'
+        productTable = f"{tableHead}{products}{tableFoot}"
+        message = f"<p>You have a new order with the ID:<strong>{orderedData['OrderId']}</strong> and a total amount of <strong>&#x20A6; {orderedData['total']}</strong>.</p>"
+        message += f"<p>The ordered Product(s) is/are as follows: <br/>{productTable}</p><p>{updatedUser} contact detail is as follows:<br/>"
+        message += f"Email: {updatedUser.email} <br/> Phone Number:{updatedUser.phone_number} <br/> Address:{updatedUser.address}</p>"
+        send_mail(f"New Order from {updatedUser}", "", "Peastan", [
+                  emailReciever], fail_silently=False, html_message=message)
+        return Response({"Ordered": Order.data})

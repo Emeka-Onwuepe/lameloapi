@@ -59,26 +59,6 @@ class Category(models.Model):
         return self.name
 
 
-class OrderedProduct(models.Model):
-    """Model definition for OrderedProduct."""
-    orderId = models.CharField(verbose_name="orderId", max_length=150)
-    product = models.ForeignKey(
-        Product, related_name="product", verbose_name="product", on_delete=models.CASCADE)
-    quantity = models.IntegerField(verbose_name="quantity")
-    size = models.CharField(verbose_name="size", max_length=150)
-    price = models.IntegerField(verbose_name="price")
-
-    class Meta:
-        """Meta definition for OrderedProduct."""
-
-        verbose_name = 'OrderedProduct'
-        verbose_name_plural = 'OrderedProducts'
-
-    def __str__(self):
-        """Unicode representation of OrderedProduct."""
-        return self.orderId
-
-
 class Customer(models.Model):
     """Model definition for Customer."""
 
@@ -98,21 +78,38 @@ class Customer(models.Model):
         self.fullName
 
 
-class Order(models.Model):
-    """Model definition for Order."""
-
-    orderId = models.CharField(verbose_name="orderId", max_length=150)
-    orderProducts = models.ManyToManyField(
-        OrderedProduct, verbose_name="orderedproducts", related_name="orderedproducts")
+class Ordered(models.Model):
+    OrderId = models.CharField(verbose_name='Order Id', max_length=50)
     customer = models.ForeignKey(
-        Customer, verbose_name="customer", on_delete=models.CASCADE)
+        Customer, verbose_name="customer", on_delete=models.CASCADE, related_name='customer')
+    total = models.IntegerField(verbose_name="total", default=1)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.OrderId
 
     class Meta:
-        """Meta definition for Order."""
-
+        managed = True
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
 
+
+class OrderedProduct(models.Model):
+    name = models.CharField(verbose_name="name", max_length=156)
+    flavour = models.CharField(verbose_name="flavour",
+                               max_length=156, default="null")
+    quantity = models.IntegerField(verbose_name="quantity", default=0)
+    price = models.IntegerField()
+    size = models.CharField(max_length=50, blank=True, default="", null=True)
+    purchaseId = models.ForeignKey(
+        Ordered, verbose_name="purchase id", on_delete=models.CASCADE, related_name='purchaseId')
+    product = models.ForeignKey(
+        Product, verbose_name="product", on_delete=models.CASCADE, related_name='product')
+
     def __str__(self):
-        """Unicode representation of Order."""
-        return self.orderId
+        return self.name
+
+    class Meta:
+        managed = True
+        verbose_name = 'OrderedProduct'
+        verbose_name_plural = 'OrderedProducts'
