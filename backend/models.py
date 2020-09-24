@@ -62,9 +62,9 @@ class Category(models.Model):
 class Customer(models.Model):
     """Model definition for Customer."""
 
-    customerId = models.CharField(verbose_name="customer Id", max_length=100)
     fullName = models.CharField(verbose_name="full name", max_length=250)
     email = models.EmailField(verbose_name="email", max_length=254)
+    address = models.CharField(verbose_name="address", max_length=256)
     phoneNumber = models.CharField(verbose_name="phone Number", max_length=50)
 
     class Meta:
