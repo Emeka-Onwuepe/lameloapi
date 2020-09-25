@@ -50,7 +50,14 @@ class OrderView(generics.GenericAPIView):
         userData = request.data['user']
         orderedData = request.data['Ordered']
         orderedProductData = request.data['OrderedProduct']
-        serializer = self.get_serializer(data=userData)
+        userId = request.data["User"]
+        serializer = ""
+        if userId != "":
+            customer = Customer.objects.get(id=int(userId))
+            serializer = self.get_serializer(
+                instance=customer, data=userData, partial=True)
+        else:
+            serializer = self.get_serializer(data=userData)
         serializer.is_valid(raise_exception=True)
         updatedUser = serializer.save()
         user = self.get_serializer(updatedUser)
