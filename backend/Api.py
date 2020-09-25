@@ -28,6 +28,11 @@ class GetProducts(generics.GenericAPIView):
                 for item in prices.data:
                     priceList.append(item)
             return Response({"products": productList, "prices": priceList})
+        elif request.data["search"] == "orderedproducts":
+            data = request.data["data"]
+            productQuery = OrderedProduct.objects.filter(purchaseId=int(data))
+            products = OrderedProductSerializer(productQuery, many=True)
+            return Response({"products": products.data})
         else:
             cat = Category.objects.get(name=action)
             product = cat.products

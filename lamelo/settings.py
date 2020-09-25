@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY_4")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://lameloapi.herokuapp.com"]
+ALLOWED_HOSTS = ["http://lameloapis.herokuapp.com"]
 # Application definition
 
 INSTALLED_APPS = [
