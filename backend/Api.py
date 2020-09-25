@@ -53,6 +53,7 @@ class OrderView(generics.GenericAPIView):
         serializer = self.get_serializer(data=userData)
         serializer.is_valid(raise_exception=True)
         updatedUser = serializer.save()
+        user = self.get_serializer(updatedUser)
 
         Ordered = OrderedSerializer(data=request.data['Ordered'], context={
                                     "customer": updatedUser})
@@ -77,4 +78,4 @@ class OrderView(generics.GenericAPIView):
         message += f"Email: {updatedUser.email} <br/> Phone Number:{updatedUser.phoneNumber} <br/> Address:{updatedUser.address}</p>"
         send_mail(f"New Order from {updatedUser}", "", "Peastan", [
                   emailReciever], fail_silently=False, html_message=message)
-        return Response({"Ordered": Order.data, "user": updatedUser.data})
+        return Response({"Ordered": Order.data, "user": user.data})
