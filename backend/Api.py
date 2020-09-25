@@ -77,4 +77,4 @@ class OrderView(generics.GenericAPIView):
         message += f"Email: {updatedUser.email} <br/> Phone Number:{updatedUser.phoneNumber} <br/> Address:{updatedUser.address}</p>"
         send_mail(f"New Order from {updatedUser}", "", "Peastan", [
                   emailReciever], fail_silently=False, html_message=message)
-        return Response({"Ordered": Order.data})
+        return Response({"Ordered": Order.data, "user": updatedUser.data})
