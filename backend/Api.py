@@ -97,4 +97,4 @@ class PaymentView(generics.GenericAPIView):
         orderedObj.paid = True
         ordered = orderedObj.save()
         returnedData = OrderedSerializer(ordered)
-        return Response(returnedData)
+        return Response(returnedData.data)
