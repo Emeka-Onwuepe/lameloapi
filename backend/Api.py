@@ -86,3 +86,15 @@ class OrderView(generics.GenericAPIView):
         send_mail(f"New Order from {updatedUser}", "", "Peastan", [
                   emailReciever], fail_silently=False, html_message=message)
         return Response({"Ordered": Order.data, "user": user.data})
+
+
+class PaymentView(generics.GenericAPIView):
+    serializer_class = OrderedSerializer
+
+    def post(self, request, *args, **kwargs):
+        orderedID = request.data['id']
+        orderedObj = Ordered.objects.get(id=int(orderedID))
+        orderedObj.paid = True
+        ordered = orderedObj.save()
+        returnedData = OrderedSerializer(ordered)
+        return Response(returnedData)
