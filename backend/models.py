@@ -83,6 +83,7 @@ class Ordered(models.Model):
     customer = models.ForeignKey(
         Customer, verbose_name="customer", on_delete=models.CASCADE, related_name='customer')
     total = models.IntegerField(verbose_name="total", default=1)
+    logistics = models.IntegerField(verbose_name="total", default=0)
     paid = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
