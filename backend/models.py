@@ -128,7 +128,7 @@ class Location(models.Model):
 
         verbose_name = 'Location'
         verbose_name_plural = 'Locations'
-        ordering = ["-location"]
+        ordering = ["location"]
 
     def __str__(self):
         """Unicode representation of Location."""
