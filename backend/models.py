@@ -131,4 +131,4 @@ class Location(models.Model):
 
     def __str__(self):
         """Unicode representation of Location."""
-        return self.price
+        return self.location
