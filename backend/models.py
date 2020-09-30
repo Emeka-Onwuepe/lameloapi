@@ -114,3 +114,21 @@ class OrderedProduct(models.Model):
         managed = True
         verbose_name = 'OrderedProduct'
         verbose_name_plural = 'OrderedProducts'
+
+
+class Location(models.Model):
+    """Model definition for Location."""
+    location = models.CharField(verbose_name="location", max_length=150)
+    price = models.IntegerField(verbose_name="price")
+
+    # TODO: Define fields here
+
+    class Meta:
+        """Meta definition for Location."""
+
+        verbose_name = 'Location'
+        verbose_name_plural = 'Locations'
+
+    def __str__(self):
+        """Unicode representation of Location."""
+        return self.price

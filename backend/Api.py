@@ -1,6 +1,6 @@
-from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer,
+from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer, LocationSerializer,
                          CustomerSerializer, OrderedSerializer, OrderedProductSerializer)
-from .models import Size, Product, Category, Customer, OrderedProduct, Ordered
+from .models import Size, Product, Category, Customer, OrderedProduct, Ordered, Location
 from rest_framework.response import Response
 from rest_framework import generics
 from django.core.mail import send_mail
@@ -97,3 +97,12 @@ class PaymentView(generics.GenericAPIView):
         orderedObj.paid = True
         returnedData = OrderedSerializer(orderedObj)
         return Response(returnedData.data)
+
+
+class LocationView(generics.GenericAPIView):
+    serializer_class = LocationSerializer
+
+    def get(self, request, *args, **kwargs):
+        locations = Location.objects.all()
+        serializer = self.get_serializer(locations, many=True)
+        return Response(serializer.data)

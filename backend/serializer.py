@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Size, Product, Category, Customer, Ordered, OrderedProduct
+from .models import Size, Product, Category, Customer, Ordered, OrderedProduct, Location
 
 
 class SizeSerializer(serializers.ModelSerializer):
@@ -55,3 +55,9 @@ class OrderedProductSerializer(serializers.ModelSerializer):
                                                 purchaseId=purchaseId, product=validated_data["product"])
         Product.save()
         return Product
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = "__all__"
