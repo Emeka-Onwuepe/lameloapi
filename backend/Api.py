@@ -1,6 +1,6 @@
 from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer, LocationSerializer,
-                         CustomerSerializer, OrderedSerializer, OrderedProductSerializer)
-from .models import Size, Product, Category, Customer, OrderedProduct, Ordered, Location
+                         CustomerSerializer, OrderedSerializer, OrderedProductSerializer, ToppingSerializer)
+from .models import Size, Product, Category, Customer, OrderedProduct, Ordered, Location, Topping
 from rest_framework.response import Response
 from rest_framework import generics
 from django.core.mail import send_mail
@@ -32,7 +32,10 @@ class GetProducts(generics.GenericAPIView):
             data = request.data["data"]
             productQuery = OrderedProduct.objects.filter(purchaseId=int(data))
             products = OrderedProductSerializer(productQuery, many=True)
-            return Response({"products": products.data})
+            toppingQuery = Topping.objects.filter(
+                orderedtoppings__purchaseId=int(data))
+            toppings = ToppingSerializer(toppingQuery, many=True)
+            return Response({"products": products.data, "toppings": toppingQuery})
         else:
             cat = Category.objects.get(name=action)
             product = cat.products
@@ -51,6 +54,7 @@ class OrderView(generics.GenericAPIView):
         orderedData = request.data['Ordered']
         orderedProductData = request.data['OrderedProduct']
         userId = request.data["User"]
+        toppingIds = request.data["toppingIds"]
         serializer = ""
         if userId != "":
             customer = Customer.objects.get(id=int(userId))
@@ -67,12 +71,21 @@ class OrderView(generics.GenericAPIView):
         Ordered.is_valid(raise_exception=True)
         order = Ordered.save()
         Order = OrderedSerializer(order)
+
+        # toppings
+        toppings = []
+        for items in toppingIds:
+            item = Topping.objects.get(int(items))
+            toppings.append(item)
+
         OrderedProduct = OrderedProductSerializer(
-            data=request.data['OrderedProduct'], many=True, context={"purchaseId": order})
+            data=request.data['OrderedProduct'], many=True, context={"purchaseId": order, "toppings": toppings})
         OrderedProduct.is_valid(raise_exception=True)
         orderedproduct = OrderedProduct.save()
 
         # prepare and send email
+
+        # remember to add toppings to the list
 
         tableHead = f'<table><thead><tr><th>Product Name</th><th>flavour</th><th>Size</th><th>Qty</th><th>Price</th></tr></thead>'
         tableFoot = f'<tfoot><tr><td colspan="4">Total</td><td>&#x20A6; {orderedData["total"]}</td></tr></tfoot></table>'
