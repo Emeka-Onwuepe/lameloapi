@@ -112,10 +112,12 @@ class PaymentView(generics.GenericAPIView):
         return Response(returnedData.data)
 
 
-class LocationView(generics.GenericAPIView):
+class LocationAndTopingView(generics.GenericAPIView):
     serializer_class = LocationSerializer
 
     def get(self, request, *args, **kwargs):
         locations = Location.objects.all()
+        toppings = Topping.objects.all()
+        toppingdata = ToppingSerializer(toppings, many=True)
         serializer = self.get_serializer(locations, many=True)
-        return Response(serializer.data)
+        return Response({"location": serializer.data, "toppings": toppingdata.data})
