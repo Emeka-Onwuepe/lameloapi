@@ -112,7 +112,7 @@ class PaymentView(generics.GenericAPIView):
         return Response(returnedData.data)
 
 
-class Location(generics.GenericAPIView):
+class LocationView(generics.GenericAPIView):
     serializer_class = LocationSerializer
 
     def get(self, request, *args, **kwargs):
