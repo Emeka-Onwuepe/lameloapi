@@ -35,6 +35,25 @@ class Topping(models.Model):
         return f'{self.topping}-{self.price}'
 
 
+class ToppingsCollection(models.Model):
+    """Model definition for ToppingsCollection."""
+
+    # TODO: Define fields here
+    name = models.CharField(verbose_name="name", max_length=150)
+    toppings = models.ManyToManyField(
+        Topping, verbose_name="toppings", related_name="toppings", blank=True)
+
+    class Meta:
+        """Meta definition for ToppingsCollection."""
+
+        verbose_name = 'ToppingsCollection'
+        verbose_name_plural = 'ToppingsCollections'
+
+    def __str__(self):
+        """Unicode representation of ToppingsCollection."""
+        self.name
+
+
 class Product(models.Model):
     """Model definition for Product."""
 
@@ -42,8 +61,8 @@ class Product(models.Model):
     image = models.ImageField(verbose_name="image", default="image")
     # flavour = models.CharField(
     #     verbose_name="flavour", max_length=200, blank=True, default="null")
-    toppings = models.ManyToManyField(
-        Topping, verbose_name="toppings", related_name="toppings", blank=True)
+    # toppings = models.ManyToManyField(
+    #     Topping, verbose_name="toppings", related_name="toppings", blank=True)
     description = models.TextField(verbose_name="description")
     price = models.IntegerField(verbose_name="price", blank=True, default=0)
     multipleSIzes = models.ManyToManyField(
@@ -119,8 +138,8 @@ class OrderedProduct(models.Model):
     name = models.CharField(verbose_name="name", max_length=156)
     # flavour = models.CharField(verbose_name="flavour",
     #                            max_length=156, default="null")
-    toppings = models.ManyToManyField(
-        Topping, verbose_name="toppings", related_name="orderedtoppings", blank=True)
+    # toppings = models.ManyToManyField(
+    #     Topping, verbose_name="toppings", related_name="orderedtoppings", blank=True)
 
     quantity = models.IntegerField(verbose_name="quantity", default=0)
     price = models.IntegerField()

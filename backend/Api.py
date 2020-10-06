@@ -1,6 +1,6 @@
 from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer, LocationSerializer,
-                         CustomerSerializer, OrderedSerializer, OrderedProductSerializer, ToppingSerializer)
-from .models import Size, Product, Category, Customer, OrderedProduct, Ordered, Location, Topping
+                         CustomerSerializer, OrderedSerializer, OrderedProductSerializer, ToppingSerializer, ToppingsCollectionSerializer)
+from .models import Size, Product, Category, Customer, OrderedProduct, Ordered, Location, Topping, ToppingsCollection
 from rest_framework.response import Response
 from rest_framework import generics
 from django.core.mail import send_mail
@@ -73,13 +73,13 @@ class OrderView(generics.GenericAPIView):
         Order = OrderedSerializer(order)
 
         # toppings
-        toppings = []
-        for items in toppingIds:
-            item = Topping.objects.get(int(items))
-            toppings.append(item)
+        # toppings = []
+        # for items in toppingIds:
+        #     item = Topping.objects.get(int(items))
+        #     toppings.append(item)
 
         OrderedProduct = OrderedProductSerializer(
-            data=request.data['OrderedProduct'], many=True, context={"purchaseId": order, "toppings": toppings})
+            data=request.data['OrderedProduct'], many=True, context={"purchaseId": order})
         OrderedProduct.is_valid(raise_exception=True)
         orderedproduct = OrderedProduct.save()
 
@@ -112,12 +112,12 @@ class PaymentView(generics.GenericAPIView):
         return Response(returnedData.data)
 
 
-class LocationAndTopingView(generics.GenericAPIView):
+class Location(generics.GenericAPIView):
     serializer_class = LocationSerializer
 
     def get(self, request, *args, **kwargs):
         locations = Location.objects.all()
-        toppings = Topping.objects.all()
-        toppingdata = ToppingSerializer(toppings, many=True)
+        # toppings = Topping.objects.all()
+        # toppingdata = ToppingSerializer(toppings, many=True)
         serializer = self.get_serializer(locations, many=True)
-        return Response({"location": serializer.data, "toppings": toppingdata.data})
+        return Response(serializer.data)

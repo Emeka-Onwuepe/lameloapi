@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Size, Product, Category, Customer, Ordered, OrderedProduct, Location, Topping
+from .models import Size, Product, Category, Customer, Ordered, OrderedProduct, Location, Topping, ToppingsCollection
 
 
 class SizeSerializer(serializers.ModelSerializer):
@@ -48,16 +48,16 @@ class OrderedProductSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         purchaseId = self.context.get("purchaseId")
-        toppings = self.context.get("toppings")
+        # toppings = self.context.get("toppings")
 
         Product = OrderedProduct.objects.create(name=validated_data["name"],
                                                 quantity=validated_data["quantity"], price=validated_data["price"],
                                                 size=validated_data["size"],
                                                 purchaseId=purchaseId, product=validated_data["product"])
         Product.save()
-        for item in toppings:
-            Product.toppings.add(int(item))
-        return Product
+        # for item in toppings:
+        #     Product.toppings.add(int(item))
+        # return Product
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -69,4 +69,10 @@ class LocationSerializer(serializers.ModelSerializer):
 class ToppingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topping
+        fields = "__all__"
+
+
+class ToppingsCollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ToppingsCollection
         fields = "__all__"
