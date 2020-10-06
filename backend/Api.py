@@ -54,7 +54,7 @@ class OrderView(generics.GenericAPIView):
         orderedData = request.data['Ordered']
         orderedProductData = request.data['OrderedProduct']
         userId = request.data["User"]
-        toppingIds = request.data["toppingIds"]
+        # toppingIds = request.data["toppingIds"]
         serializer = ""
         if userId != "":
             customer = Customer.objects.get(id=int(userId))
