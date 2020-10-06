@@ -51,7 +51,7 @@ class ToppingsCollection(models.Model):
 
     def __str__(self):
         """Unicode representation of ToppingsCollection."""
-        self.name
+        return self.name
 
 
 class Product(models.Model):
