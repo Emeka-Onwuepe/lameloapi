@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Size, Product, Category, OrderedProduct, Customer, Ordered, OrderedProduct, Location, Topping
+from .models import Size, Product, Category, OrderedProduct, Customer, Ordered, OrderedProduct, Location, Topping, ToppingsCollection
 
 
 # Register your models here.
@@ -11,3 +11,4 @@ admin.site.register(Customer)
 admin.site.register(Ordered)
 admin.site.register(Location)
 admin.site.register(Topping)
+admin.site.register(ToppingsCollection)
