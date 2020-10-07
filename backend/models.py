@@ -29,6 +29,7 @@ class Topping(models.Model):
 
         verbose_name = 'Topping'
         verbose_name_plural = 'Toppings'
+        ordering = ['topping']
 
     def __str__(self):
         """Unicode representation of Topping."""
