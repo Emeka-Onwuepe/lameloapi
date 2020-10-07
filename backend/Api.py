@@ -32,10 +32,7 @@ class GetProducts(generics.GenericAPIView):
             data = request.data["data"]
             productQuery = OrderedProduct.objects.filter(purchaseId=int(data))
             products = OrderedProductSerializer(productQuery, many=True)
-            toppingQuery = Topping.objects.filter(
-                orderedtoppings__purchaseId=int(data))
-            toppings = ToppingSerializer(toppingQuery, many=True)
-            return Response({"products": products.data, "toppings": toppingQuery})
+            return Response({"products": products.data})
         else:
             cat = Category.objects.get(name=action)
             product = cat.products
@@ -43,7 +40,14 @@ class GetProducts(generics.GenericAPIView):
             pureList = list(dict.fromkeys(size))
             prices = SizeSerializer(pureList, many=True)
             products = ProductSerializer(product, many=True)
-            return Response({"products": products.data, "prices": prices.data})
+            toppingsData = ''
+            try:
+                toppingQuery = ToppingsCollection.objects.get(name=action)
+                toppings = ToppingSerializer(toppingQuery.toppings, many=True)
+                toppingsData = toppings.data
+            except Exception:
+                pass
+            return Response({"products": products.data, "prices": prices.data, "toppings": toppingsData})
 
 
 class OrderView(generics.GenericAPIView):
@@ -87,11 +91,11 @@ class OrderView(generics.GenericAPIView):
 
         # remember to add toppings to the list
 
-        tableHead = f'<table><thead><tr><th>Product Name</th><th>flavour</th><th>Size</th><th>Qty</th><th>Price</th></tr></thead>'
+        tableHead = f'<table><thead><tr><th>Product Name</th><th>Size</th><th>Qty</th><th>Price</th></tr></thead>'
         tableFoot = f'<tfoot><tr><td colspan="4">Total</td><td>&#x20A6; {orderedData["total"]}</td></tr></tfoot></table>'
         products = ""
         for item in orderedProductData:
-            products += f'<tr><td>{item["name"]}</td><td>{item["flavour"]}</td><td>{item["size"]}</td><td>{item["quantity"]}</td><td>&#x20A6; {item["price"]}</td></tr>'
+            products += f'<tr><td>{item["name"]}</td><td>{item["size"]}</td><td>{item["quantity"]}</td><td>&#x20A6; {item["price"]}</td></tr>'
         productTable = f"{tableHead}{products}{tableFoot}"
         message = f"<p>You have a new order with the ID:<strong>{orderedData['OrderId']}</strong> and a total amount of <strong>&#x20A6; {orderedData['total']}</strong>.</p>"
         message += f"<p>The ordered Product(s) is/are as follows: <br/>{productTable}</p><p>{updatedUser} contact detail is as follows:<br/>"
