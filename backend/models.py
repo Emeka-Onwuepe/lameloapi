@@ -123,6 +123,8 @@ class Ordered(models.Model):
         Customer, verbose_name="customer", on_delete=models.CASCADE, related_name='customer')
     total = models.IntegerField(verbose_name="total", default=1)
     logistics = models.IntegerField(verbose_name="total", default=0)
+    destination = models.CharField(
+        verbose_name="destination", max_length=150, default="null")
     paid = models.BooleanField(default=False)
     delivered = models.BooleanField(default=False)
     archived = models.BooleanField(default=False)
