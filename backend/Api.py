@@ -131,7 +131,7 @@ class DashBoardView(generics.GenericAPIView):
     serializer_class = OrderedSerializer
 
     def get(self, request, *args, **kwargs):
-        ordered = Ordered.objects.filter(paid=True)
+        ordered = Ordered.objects.filter(paid=True).filter(archived=True)
         orderdSerializer = OrderedSerializer(ordered, many=True)
         return Response({"ordered": orderdSerializer.data})
 
