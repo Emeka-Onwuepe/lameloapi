@@ -1,5 +1,6 @@
 from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer, LocationSerializer,
-                         CustomerSerializer, OrderedSerializer, OrderedProductSerializer, ToppingSerializer, ToppingsCollectionSerializer)
+                         CustomerSerializer, OrderedSerializer, OrderedProductSerializer, ToppingSerializer,
+                         ToppingsCollectionSerializer, GetOrderedSerializer)
 from .models import Size, Product, Category, Customer, OrderedProduct, Ordered, Location, Topping, ToppingsCollection
 from rest_framework.response import Response
 from rest_framework import generics
@@ -74,7 +75,7 @@ class OrderView(generics.GenericAPIView):
                                     "customer": updatedUser})
         Ordered.is_valid(raise_exception=True)
         order = Ordered.save()
-        Order = OrderedSerializer(order)
+        Order = GetOrderedSerializer(order)
 
         # toppings
         # toppings = []
@@ -113,7 +114,7 @@ class PaymentView(generics.GenericAPIView):
         orderedObj = Ordered.objects.get(id=int(orderedID))
         orderedObj.paid = True
         orderedObj.save()
-        returnedData = OrderedSerializer(orderedObj)
+        returnedData = GetOrderedSerializer(orderedObj)
         return Response(returnedData.data)
 
 
@@ -129,11 +130,11 @@ class LocationView(generics.GenericAPIView):
 
 
 class DashBoardView(generics.GenericAPIView):
-    serializer_class = OrderedSerializer
+    serializer_class = GetOrderedSerializer
 
     def get(self, request, *args, **kwargs):
         ordered = Ordered.objects.filter(paid=True).filter(archived=False)
-        orderdSerializer = OrderedSerializer(ordered, many=True)
+        orderdSerializer = GetOrderedSerializer(ordered, many=True)
         return Response({"ordered": orderdSerializer.data})
 
     def post(self, request, *args, **kwargs):

@@ -25,6 +25,11 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = "__all__"
 
+class GetOrderedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ordered
+        fields = "__all__"
+
 
 class OrderedSerializer(serializers.ModelSerializer):
     class Meta:
