@@ -125,3 +125,22 @@ class LocationView(generics.GenericAPIView):
         # toppingdata = ToppingSerializer(toppings, many=True)
         serializer = self.get_serializer(locations, many=True)
         return Response(serializer.data)
+
+
+class DashBoardView(generics.GenericAPIView):
+    serializer_class = OrderedSerializer
+
+    def get(self, request, *args, **kwargs):
+        ordered = Ordered.objects.filter(paid=True).filter(archived=False)
+        orderdSerializer = OrderedSerializer(ordered, many=True)
+        return Response({"ordered": orderdSerializer.data})
+
+    def post(self, request, *args, **kwargs):
+        if request.data["search"] == "orderedproducts":
+            data = request.data["data"]
+            customerID = request.data["customer"]
+            productQuery = OrderedProduct.objects.filter(purchaseId=int(data))
+            products = OrderedProductSerializer(productQuery, many=True)
+            customer = Customer.objects.get(id=int(customerID))
+            customerData = CustomerSerializer(customer)
+            return Response({"products": products.data, "customer": customerData.data})

@@ -124,6 +124,8 @@ class Ordered(models.Model):
     total = models.IntegerField(verbose_name="total", default=1)
     logistics = models.IntegerField(verbose_name="total", default=0)
     paid = models.BooleanField(default=False)
+    delivered = models.BooleanField(default=False)
+    archived = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
