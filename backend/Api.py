@@ -162,3 +162,7 @@ class DashBoardView(generics.GenericAPIView):
             ordered = Ordered.objects.filter(paid=True).filter(archived=False)
             orderdSerializer = GetOrderedSerializer(ordered, many=True)
             return Response({"ordered": orderdSerializer.data})
+        elif request.data["action"] == "Get_Archive":
+            ordered = Ordered.objects.filter(archived=True)
+            orderdSerializer = GetOrderedSerializer(ordered, many=True)
+            return Response({"Archive": orderdSerializer.data})
