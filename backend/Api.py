@@ -135,7 +135,9 @@ class DashBoardView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         ordered = Ordered.objects.filter(paid=True).filter(archived=False)
         orderdSerializer = GetOrderedSerializer(ordered, many=True)
-        return Response({"ordered": orderdSerializer.data})
+        customer = Customer.objects.all()
+        customerData = CustomerSerializer(customer, many=True)
+        return Response({"ordered": orderdSerializer.data, "customers": customerData.data})
 
     def post(self, request, *args, **kwargs):
         if request.data["search"] == "orderedproducts":
@@ -146,23 +148,25 @@ class DashBoardView(generics.GenericAPIView):
             customer = Customer.objects.get(id=int(customerID))
             customerData = CustomerSerializer(customer)
             return Response({"products": products.data, "customer": customerData.data})
-        elif request.data["action"] == "Delivered":
-            data = request.data["data"]
-            order = Ordered.objects.get(OrderId=data)
-            order.delivered = True
-            order.save()
-            ordered = Ordered.objects.filter(paid=True).filter(archived=False)
-            orderdSerializer = GetOrderedSerializer(ordered, many=True)
-            return Response({"ordered": orderdSerializer.data})
-        elif request.data["action"] == "Archive":
-            data = request.data["data"]
-            order = Ordered.objects.get(OrderId=data)
-            order.archived = True
-            order.save()
-            ordered = Ordered.objects.filter(paid=True).filter(archived=False)
-            orderdSerializer = GetOrderedSerializer(ordered, many=True)
-            return Response({"ordered": orderdSerializer.data})
         elif request.data["action"] == "Get_Archive":
             ordered = Ordered.objects.filter(archived=True)
             orderdSerializer = GetOrderedSerializer(ordered, many=True)
-            return Response({"Archive": orderdSerializer.data})
+            customer = Customer.objects.all()
+            customerData = CustomerSerializer(customer, many=True)
+            return Response({"Archive": orderdSerializer.data, "customers": customerData.data})
+        else:
+            if request.data["action"] == "Delivered":
+                data = request.data["data"]
+                order = Ordered.objects.get(OrderId=data)
+                order.delivered = True
+                order.save()
+            elif request.data["action"] == "Archive":
+                data = request.data["data"]
+                order = Ordered.objects.get(OrderId=data)
+                order.archived = True
+                order.save()
+            ordered = Ordered.objects.filter(paid=True).filter(archived=False)
+            orderdSerializer = GetOrderedSerializer(ordered, many=True)
+            customer = Customer.objects.all()
+            customerData = CustomerSerializer(customer, many=True)
+            return Response({"ordered": orderdSerializer.data, "customers": customerData.data})
