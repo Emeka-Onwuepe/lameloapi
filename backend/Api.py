@@ -164,9 +164,9 @@ class DashBoardView(generics.GenericAPIView):
             customerData = CustomerSerializer(customer)
             toppingsData = []
             try:
-                toppingQuery = OrderedTopping.objects.get(purchaseId=int(data))
-                toppings = OrderedToppingSerializer(
-                    toppingQuery.toppings, many=True)
+                toppingQuery = OrderedTopping.objects.filter(
+                    purchaseId=int(data))
+                toppings = OrderedToppingSerializer(toppingQuery, many=True)
                 toppingsData = toppings.data
             except Exception:
                 pass
