@@ -51,12 +51,12 @@ class GetProducts(generics.GenericAPIView):
             prices = SizeSerializer(pureList, many=True)
             products = ProductSerializer(product, many=True)
             toppingsData = ''
-            try:
-                toppingQuery = ToppingsCollection.objects.get(name=action)
-                toppings = ToppingSerializer(toppingQuery.toppings, many=True)
-                toppingsData = toppings.data
-            except Exception:
-                pass
+            # try:
+            toppingQuery = ToppingsCollection.objects.get(name=action)
+            toppings = ToppingSerializer(toppingQuery.toppings, many=True)
+            toppingsData = toppings.data
+            # except Exception:
+            #     pass
             return Response({"products": products.data, "prices": prices.data, "toppings": toppingsData})
 
 
@@ -172,13 +172,13 @@ class DashBoardView(generics.GenericAPIView):
             toppingsData = toppings.data
             # except Exception:
             #     pass
-            return Response({"products": products.data, "customer": customerData.data})
+            return Response({"products": products.data, "customer": customerData.data, "toppings": toppingsData})
         elif request.data["action"] == "Get_Archive":
             ordered = Ordered.objects.filter(archived=True)
             orderdSerializer = GetOrderedSerializer(ordered, many=True)
             customer = Customer.objects.all()
             customerData = CustomerSerializer(customer, many=True)
-            return Response({"Archive": orderdSerializer.data, "customers": customerData.data, "toppings": toppingsData})
+            return Response({"Archive": orderdSerializer.data, "customers": customerData.data})
         else:
             if request.data["action"] == "Delivered":
                 data = request.data["data"]
