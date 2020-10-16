@@ -93,7 +93,7 @@ class OrderView(generics.GenericAPIView):
             Orderedtoppings = OrderedToppingSerializer(
                 data=orderedtoppings, many=True, context={"purchaseId": order})
             Orderedtoppings.is_valid(raise_exception=True)
-            Orderedtoppings = OrderedProduct.save()
+            Orderedtoppings = Orderedtoppings.save()
 
         # prepare and send email
 
