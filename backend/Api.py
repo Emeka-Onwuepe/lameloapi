@@ -53,7 +53,7 @@ class GetProducts(generics.GenericAPIView):
             toppingsData = ''
             # try:
             toppingQuery = ToppingsCollection.objects.get(name=action)
-            toppings = ToppingSerializer(toppingQuery.toppings, many=True)
+            toppings = ToppingSerializer(toppingQuery, many=True)
             toppingsData = toppings.data
             # except Exception:
             #     pass
