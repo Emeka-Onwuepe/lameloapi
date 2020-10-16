@@ -163,6 +163,24 @@ class OrderedProduct(models.Model):
         verbose_name_plural = 'OrderedProducts'
 
 
+class OrderedTopping(models.Model):
+    name = models.CharField(verbose_name="name", max_length=156)
+    quantity = models.IntegerField(verbose_name="quantity", default=0)
+    price = models.IntegerField()
+    purchaseId = models.ForeignKey(
+        Ordered, verbose_name="purchase id", on_delete=models.CASCADE, related_name='purchaseIdTopping')
+    topping = models.ForeignKey(
+        Topping, verbose_name="topping", on_delete=models.CASCADE, related_name='orderedtopping')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        managed = True
+        verbose_name = 'OrderedTopping'
+        verbose_name_plural = 'OrderedToppings'
+
+
 class Location(models.Model):
     """Model definition for Location."""
     location = models.CharField(verbose_name="location", max_length=150)

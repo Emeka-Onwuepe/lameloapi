@@ -1,7 +1,7 @@
 from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer, LocationSerializer,
                          CustomerSerializer, OrderedSerializer, OrderedProductSerializer, ToppingSerializer,
-                         ToppingsCollectionSerializer, GetOrderedSerializer)
-from .models import Size, Product, Category, Customer, OrderedProduct, Ordered, Location, Topping, ToppingsCollection
+                         ToppingsCollectionSerializer, GetOrderedSerializer, OrderedToppingSerializer)
+from .models import Size, Product, Category, Customer, OrderedProduct, Ordered, Location, Topping, ToppingsCollection, OrderedTopping
 from rest_framework.response import Response
 from rest_framework import generics
 from django.core.mail import send_mail
@@ -59,6 +59,7 @@ class OrderView(generics.GenericAPIView):
         orderedData = request.data['Ordered']
         orderedProductData = request.data['OrderedProduct']
         userId = request.data["User"]
+        orderedtoppings = request.data['OrderedToppings']
         # toppingIds = request.data["toppingIds"]
         serializer = ""
         if userId != "":
@@ -84,9 +85,15 @@ class OrderView(generics.GenericAPIView):
         #     toppings.append(item)
 
         OrderedProduct = OrderedProductSerializer(
-            data=request.data['OrderedProduct'], many=True, context={"purchaseId": order})
+            data=orderedProductData, many=True, context={"purchaseId": order})
         OrderedProduct.is_valid(raise_exception=True)
         orderedproduct = OrderedProduct.save()
+
+        if len(orderedtoppings) > 0:
+            Orderedtoppings = OrderedToppingSerializer(
+                data=orderedtoppings, many=True, context={"purchaseId": order})
+            Orderedtoppings.is_valid(raise_exception=True)
+            Orderedtoppings = OrderedProduct.save()
 
         # prepare and send email
 
