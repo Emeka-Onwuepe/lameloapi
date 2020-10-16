@@ -34,13 +34,14 @@ class GetProducts(generics.GenericAPIView):
             toppingsData = []
             productQuery = OrderedProduct.objects.filter(purchaseId=int(data))
             products = OrderedProductSerializer(productQuery, many=True)
-            # try:
-            toppingQuery = OrderedTopping.objects.get(purchaseId=int(data))
-            toppings = OrderedToppingSerializer(
-                toppingQuery.toppings, many=True)
-            toppingsData = toppings.data
-            # except Exception:
-            #     pass
+            try:
+                toppingQuery = OrderedTopping.objects.filter(
+                    purchaseId=int(data))
+                toppings = OrderedToppingSerializer(
+                    toppingQuery.toppings, many=True)
+                toppingsData = toppings.data
+            except Exception:
+                pass
             return Response({"products": products.data, "toppings": toppingsData})
         else:
             cat = Category.objects.get(name=action)
@@ -164,7 +165,8 @@ class DashBoardView(generics.GenericAPIView):
             customerData = CustomerSerializer(customer)
             toppingsData = []
             try:
-                toppingQuery = OrderedTopping.objects.get(purchaseId=int(data))
+                toppingQuery = OrderedTopping.objects.filter(
+                    purchaseId=int(data))
                 toppings = OrderedToppingSerializer(
                     toppingQuery.toppings, many=True)
                 toppingsData = toppings.data
