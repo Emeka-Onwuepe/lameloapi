@@ -37,8 +37,7 @@ class GetProducts(generics.GenericAPIView):
             try:
                 toppingQuery = OrderedTopping.objects.filter(
                     purchaseId=int(data))
-                toppings = OrderedToppingSerializer(
-                    toppingQuery.toppings, many=True)
+                toppings = OrderedToppingSerializer(toppingQuery, many=True)
                 toppingsData = toppings.data
             except Exception:
                 pass
@@ -51,12 +50,12 @@ class GetProducts(generics.GenericAPIView):
             prices = SizeSerializer(pureList, many=True)
             products = ProductSerializer(product, many=True)
             toppingsData = ''
-            # try:
-            toppingQuery = ToppingsCollection.objects.get(name=action)
-            toppings = ToppingSerializer(toppingQuery, many=True)
-            toppingsData = toppings.data
-            # except Exception:
-            #     pass
+            try:
+                toppingQuery = ToppingsCollection.objects.get(name=action)
+                toppings = ToppingSerializer(toppingQuery.toppings, many=True)
+                toppingsData = toppings.data
+            except Exception:
+                pass
             return Response({"products": products.data, "prices": prices.data, "toppings": toppingsData})
 
 
@@ -164,14 +163,13 @@ class DashBoardView(generics.GenericAPIView):
             customer = Customer.objects.get(id=int(customerID))
             customerData = CustomerSerializer(customer)
             toppingsData = []
-            # try:
-            toppingQuery = OrderedTopping.objects.filter(
-                purchaseId=int(data))
-            toppings = OrderedToppingSerializer(
-                toppingQuery.toppings, many=True)
-            toppingsData = toppings.data
-            # except Exception:
-            #     pass
+            try:
+                toppingQuery = OrderedTopping.objects.get(purchaseId=int(data))
+                toppings = OrderedToppingSerializer(
+                    toppingQuery.toppings, many=True)
+                toppingsData = toppings.data
+            except Exception:
+                pass
             return Response({"products": products.data, "customer": customerData.data, "toppings": toppingsData})
         elif request.data["action"] == "Get_Archive":
             ordered = Ordered.objects.filter(archived=True)
