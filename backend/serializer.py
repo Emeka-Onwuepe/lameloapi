@@ -69,7 +69,7 @@ class OrderedProductSerializer(serializers.ModelSerializer):
 
 class OrderedToppingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = OrderedProduct
+        model = OrderedTopping
         fields = ["id", "name",
                   "quantity", "price", "topping"]
 
@@ -77,7 +77,7 @@ class OrderedToppingSerializer(serializers.ModelSerializer):
         purchaseId = self.context.get("purchaseId")
         # toppings = self.context.get("toppings")
 
-        Product = OrderedProduct.objects.create(name=validated_data["name"],
+        Product = OrderedTopping.objects.create(name=validated_data["name"],
                                                 quantity=validated_data["quantity"], price=validated_data["price"],
                                                 purchaseId=purchaseId, topping=validated_data["topping"])
         Product.save()
