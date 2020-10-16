@@ -164,14 +164,14 @@ class DashBoardView(generics.GenericAPIView):
             customer = Customer.objects.get(id=int(customerID))
             customerData = CustomerSerializer(customer)
             toppingsData = []
-            try:
-                toppingQuery = OrderedTopping.objects.filter(
-                    purchaseId=int(data))
-                toppings = OrderedToppingSerializer(
-                    toppingQuery.toppings, many=True)
-                toppingsData = toppings.data
-            except Exception:
-                pass
+            # try:
+            toppingQuery = OrderedTopping.objects.filter(
+                purchaseId=int(data))
+            toppings = OrderedToppingSerializer(
+                toppingQuery.toppings, many=True)
+            toppingsData = toppings.data
+            # except Exception:
+            #     pass
             return Response({"products": products.data, "customer": customerData.data})
         elif request.data["action"] == "Get_Archive":
             ordered = Ordered.objects.filter(archived=True)
