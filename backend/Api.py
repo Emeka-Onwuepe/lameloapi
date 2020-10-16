@@ -31,9 +31,17 @@ class GetProducts(generics.GenericAPIView):
             return Response({"products": productList, "prices": priceList})
         elif request.data["search"] == "orderedproducts":
             data = request.data["data"]
+            toppingsData = []
             productQuery = OrderedProduct.objects.filter(purchaseId=int(data))
             products = OrderedProductSerializer(productQuery, many=True)
-            return Response({"products": products.data})
+            try:
+                toppingQuery = OrderedTopping.objects.get(purchaseId=int(data))
+                toppings = OrderedToppingSerializer(
+                    toppingQuery.toppings, many=True)
+                toppingsData = toppings.data
+            except Exception:
+                pass
+            return Response({"products": products.data, "toppings": toppingsData})
         else:
             cat = Category.objects.get(name=action)
             product = cat.products
@@ -99,17 +107,17 @@ class OrderView(generics.GenericAPIView):
 
         # remember to add toppings to the list
 
-        tableHead = f'<table><thead><tr><th>Product Name</th><th>Size</th><th>Qty</th><th>Price</th></tr></thead>'
-        tableFoot = f'<tfoot><tr><td colspan="4">Total</td><td>&#x20A6; {orderedData["total"]}</td></tr></tfoot></table>'
-        products = ""
-        for item in orderedProductData:
-            products += f'<tr><td>{item["name"]}</td><td>{item["size"]}</td><td>{item["quantity"]}</td><td>&#x20A6; {item["price"]}</td></tr>'
-        productTable = f"{tableHead}{products}{tableFoot}"
-        message = f"<p>You have a new order with the ID:<strong>{orderedData['OrderId']}</strong> and a total amount of <strong>&#x20A6; {orderedData['total']}</strong>.</p>"
-        message += f"<p>The ordered Product(s) is/are as follows: <br/>{productTable}</p><p>{updatedUser} contact detail is as follows:<br/>"
-        message += f"Email: {updatedUser.email} <br/> Phone Number:{updatedUser.phoneNumber} <br/> Address:{updatedUser.address}</p>"
-        send_mail(f"New Order from {updatedUser}", "", "Peastan", [
-                  emailReciever], fail_silently=False, html_message=message)
+        # tableHead = f'<table><thead><tr><th>Product Name</th><th>Size</th><th>Qty</th><th>Price</th></tr></thead>'
+        # tableFoot = f'<tfoot><tr><td colspan="4">Total</td><td>&#x20A6; {orderedData["total"]}</td></tr></tfoot></table>'
+        # products = ""
+        # for item in orderedProductData:
+        #     products += f'<tr><td>{item["name"]}</td><td>{item["size"]}</td><td>{item["quantity"]}</td><td>&#x20A6; {item["price"]}</td></tr>'
+        # productTable = f"{tableHead}{products}{tableFoot}"
+        # message = f"<p>You have a new order with the ID:<strong>{orderedData['OrderId']}</strong> and a total amount of <strong>&#x20A6; {orderedData['total']}</strong>.</p>"
+        # message += f"<p>The ordered Product(s) is/are as follows: <br/>{productTable}</p><p>{updatedUser} contact detail is as follows:<br/>"
+        # message += f"Email: {updatedUser.email} <br/> Phone Number:{updatedUser.phoneNumber} <br/> Address:{updatedUser.address}</p>"
+        # send_mail(f"New Order from {updatedUser}", "", "Peastan", [
+        #           emailReciever], fail_silently=False, html_message=message)
         return Response({"Ordered": Order.data, "user": user.data})
 
 
@@ -154,13 +162,21 @@ class DashBoardView(generics.GenericAPIView):
             products = OrderedProductSerializer(productQuery, many=True)
             customer = Customer.objects.get(id=int(customerID))
             customerData = CustomerSerializer(customer)
+            toppingsData = []
+            try:
+                toppingQuery = OrderedTopping.objects.get(purchaseId=int(data))
+                toppings = OrderedToppingSerializer(
+                    toppingQuery.toppings, many=True)
+                toppingsData = toppings.data
+            except Exception:
+                pass
             return Response({"products": products.data, "customer": customerData.data})
         elif request.data["action"] == "Get_Archive":
             ordered = Ordered.objects.filter(archived=True)
             orderdSerializer = GetOrderedSerializer(ordered, many=True)
             customer = Customer.objects.all()
             customerData = CustomerSerializer(customer, many=True)
-            return Response({"Archive": orderdSerializer.data, "customers": customerData.data})
+            return Response({"Archive": orderdSerializer.data, "customers": customerData.data, "toppings": toppingsData})
         else:
             if request.data["action"] == "Delivered":
                 data = request.data["data"]
