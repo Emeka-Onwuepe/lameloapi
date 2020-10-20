@@ -137,6 +137,7 @@ class Ordered(models.Model):
         managed = True
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
+        ordering = ['created']
 
 
 class OrderedProduct(models.Model):
