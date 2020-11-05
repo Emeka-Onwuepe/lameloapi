@@ -105,7 +105,7 @@ class ToppingsCollectionSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    userName = serializers.CharField()
+    Username = serializers.CharField()
     password = serializers.CharField()
 
     def validate(self, data):
