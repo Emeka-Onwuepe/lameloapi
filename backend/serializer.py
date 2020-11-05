@@ -1,5 +1,8 @@
-from rest_framework import serializers
 from .models import Size, Product, Category, Customer, Ordered, OrderedProduct, Location, Topping, ToppingsCollection, OrderedTopping
+from django.contrib.auth import authenticate
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class SizeSerializer(serializers.ModelSerializer):
@@ -99,3 +102,22 @@ class ToppingsCollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ToppingsCollection
         fields = "__all__"
+
+
+class LoginSerializer(serializers.Serializer):
+    userName = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        user = authenticate(**data)
+
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Invalid Credentials")
+
+
+class GetUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ["password", "last_login", "is_active",
+                   "is_admin", "is_superuser", "groups", "user_permissions"]

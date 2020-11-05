@@ -1,10 +1,11 @@
 from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer, LocationSerializer,
                          CustomerSerializer, OrderedSerializer, OrderedProductSerializer, ToppingSerializer,
-                         ToppingsCollectionSerializer, GetOrderedSerializer, OrderedToppingSerializer)
+                         ToppingsCollectionSerializer, GetOrderedSerializer, OrderedToppingSerializer, LoginSerializer, GetUserSerializer)
 from .models import Size, Product, Category, Customer, OrderedProduct, Ordered, Location, Topping, ToppingsCollection, OrderedTopping
 from rest_framework.response import Response
 from rest_framework import generics
 from django.core.mail import send_mail
+from knox.models import AuthToken
 emailReciever = "pascalemy2010@gmail.com"
 
 
@@ -142,6 +143,18 @@ class LocationView(generics.GenericAPIView):
         # toppingdata = ToppingSerializer(toppings, many=True)
         serializer = self.get_serializer(locations, many=True)
         return Response(serializer.data)
+
+
+class LoginUser(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data
+        _, token = AuthToken.objects.create(user)
+        returnedUser = GetUserSerializer(user)
+        return Response({"user": returnedUser.data, "token": token})
 
 
 class DashBoardView(generics.GenericAPIView):
