@@ -3,7 +3,7 @@ from .serializer import (SizeSerializer, ProductSerializer, CategorySerializer, 
                          ToppingsCollectionSerializer, GetOrderedSerializer, OrderedToppingSerializer, LoginSerializer, GetUserSerializer)
 from .models import Size, Product, Category, Customer, OrderedProduct, Ordered, Location, Topping, ToppingsCollection, OrderedTopping
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, permissions
 from django.core.mail import send_mail
 from knox.models import AuthToken
 emailReciever = "pascalemy2010@gmail.com"
@@ -159,6 +159,7 @@ class LoginUser(generics.GenericAPIView):
 
 class DashBoardView(generics.GenericAPIView):
     serializer_class = GetOrderedSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
 
     def get(self, request, *args, **kwargs):
         ordered = Ordered.objects.filter(paid=True).filter(archived=False)
