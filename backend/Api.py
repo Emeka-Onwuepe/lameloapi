@@ -191,6 +191,20 @@ class DashBoardView(generics.GenericAPIView):
             customer = Customer.objects.all()
             customerData = CustomerSerializer(customer, many=True)
             return Response({"Archive": orderdSerializer.data, "customers": customerData.data})
+        elif request.data["action"] == "Get_Sales":
+            data = request.data["data"]
+            productQuery = OrderedProduct.objects.filter(
+                purchaseId__created=data)
+            products = OrderedProductSerializer(productQuery, many=True)
+            toppingsData = []
+            try:
+                toppingQuery = OrderedTopping.objects.filter(
+                    purchaseId__created=data)
+                toppings = OrderedToppingSerializer(toppingQuery, many=True)
+                toppingsData = toppings.data
+            except Exception:
+                pass
+            return Response({"products": products.data, "customer": customerData.data, "toppings": toppingsData})
         else:
             if request.data["action"] == "Delivered":
                 data = request.data["data"]
