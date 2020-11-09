@@ -198,17 +198,20 @@ class DashBoardView(generics.GenericAPIView):
             for item in data:
                 productQuery = OrderedProduct.objects.filter(
                     purchaseId=int(item))
-                products = OrderedProductSerializer(productQuery, many=True)
-                compiled.append(products.data)
+                if len(productQuery) > 0:
+                    products = OrderedProductSerializer(
+                        productQuery, many=True)
+                    compiled.append(products.data)
 
             toppingsData = []
             try:
                 for item in data:
                     toppingQuery = OrderedTopping.objects.filter(
                         purchaseId=int(item))
-                    toppings = OrderedToppingSerializer(
-                        toppingQuery, many=True)
-                    toppingsData.append(toppings.data)
+                    if len(toppingQuery) > 0:
+                        toppings = OrderedToppingSerializer(
+                            toppingQuery, many=True)
+                        toppingsData.append(toppings.data)
             except Exception:
                 pass
             return Response({"products": compiled, "toppings": toppingsData})
