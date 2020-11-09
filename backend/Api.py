@@ -204,7 +204,7 @@ class DashBoardView(generics.GenericAPIView):
                 toppingsData = toppings.data
             except Exception:
                 pass
-            return Response({"products": products.data, "customer": customerData.data, "toppings": toppingsData})
+            return Response({"products": products.data, "toppings": toppingsData})
         else:
             if request.data["action"] == "Delivered":
                 data = request.data["data"]
