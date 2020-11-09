@@ -197,7 +197,7 @@ class DashBoardView(generics.GenericAPIView):
             # compiledToppings=[]
             for item in data:
                 productQuery = OrderedProduct.objects.filter(
-                    purchaseId=item)
+                    purchaseId=int(item))
                 products = OrderedProductSerializer(productQuery, many=True)
                 compiled.append(products.data)
 
@@ -205,7 +205,7 @@ class DashBoardView(generics.GenericAPIView):
             try:
                 for item in data:
                     toppingQuery = OrderedTopping.objects.filter(
-                        purchaseId=item)
+                        purchaseId=int(item))
                     toppings = OrderedToppingSerializer(
                         toppingQuery, many=True)
                     toppingsData.append(toppings.data)
