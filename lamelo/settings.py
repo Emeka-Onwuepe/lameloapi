@@ -161,7 +161,7 @@ DEFAULT_FROM_EMAIL = "Lamelo"
 # AWS settings
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID ")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = "casper-web-files"
+AWS_STORAGE_BUCKET_NAME = "lotz"
 AWS_S3_FILE_OVERWRITE = False
 DEFAULT_FILE_STORAGE = 'lamelo.aws_storage.MediaStorage'
 AWS_DEFAULT_ACL = None
