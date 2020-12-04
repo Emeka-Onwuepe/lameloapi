@@ -19,6 +19,7 @@ class GetProducts(generics.GenericAPIView):
             wants = ["burgers", "lollipop", "wings"]
             productList = []
             priceList = []
+            toppingsData = ''
             for item in wants:
                 cat = Category.objects.get(name=item)
                 size = Size.objects.filter(multiplesizes__category__id=cat.id)
