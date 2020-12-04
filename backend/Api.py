@@ -15,8 +15,8 @@ class GetProducts(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         action = request.data["action"]
 
-        if action == "bfw":
-            wants = ["burgers", "fries", "wings"]
+        if action == "blw":
+            wants = ["burgers", "lollipop", "wings"]
             productList = []
             priceList = []
             for item in wants:
@@ -29,7 +29,13 @@ class GetProducts(generics.GenericAPIView):
                     productList.append(item)
                 for item in prices.data:
                     priceList.append(item)
-            return Response({"products": productList, "prices": priceList})
+            try:
+                toppingQuery = ToppingsCollection.objects.get(name=action)
+                toppings = ToppingSerializer(toppingQuery.toppings, many=True)
+                toppingsData = toppings.data
+            except Exception:
+                pass
+            return Response({"products": productList, "prices": priceList,"toppings": toppingsData})
         elif request.data["search"] == "orderedproducts":
             data = request.data["data"]
             toppingsData = []
