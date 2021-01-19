@@ -198,6 +198,15 @@ class DashBoardView(generics.GenericAPIView):
             customer = Customer.objects.all()
             customerData = CustomerSerializer(customer, many=True)
             return Response({"Archive": orderdSerializer.data, "customers": customerData.data})
+        elif request.data["action"] == "Get_Customers":
+            customers=""
+            try:
+                customer = Customer.objects.all()
+                customerData = CustomerSerializer(customer, many=True)
+                customers= customerData.data
+            except Exception:
+                pass
+            return Response({"customers":customers })
         elif request.data["action"] == "Get_Sales":
             data = request.data["data"]
             compiled = []
