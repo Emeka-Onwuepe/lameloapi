@@ -37,6 +37,28 @@ class GetProducts(generics.GenericAPIView):
             except Exception:
                 pass
             return Response({"products": productList, "prices": priceList,"toppings": toppingsData})
+        if action == "food":
+            wants = ["Pasta", "Chicken Rice", "Seafood Rice"]
+            productList = []
+            priceList = []
+            toppingsData = ''
+            for item in wants:
+                cat = Category.objects.get(name=item)
+                size = Size.objects.filter(multiplesizes__category__id=cat.id)
+                pureList = list(dict.fromkeys(size))
+                prices = SizeSerializer(pureList, many=True)
+                products = ProductSerializer(cat.products, many=True)
+                for item in products.data:
+                    productList.append(item)
+                for item in prices.data:
+                    priceList.append(item)
+            try:
+                toppingQuery = ToppingsCollection.objects.get(name=action)
+                toppings = ToppingSerializer(toppingQuery.toppings, many=True)
+                toppingsData = toppings.data
+            except Exception:
+                pass
+            return Response({"products": productList, "prices": priceList,"toppings": toppingsData})
         elif request.data["search"] == "orderedproducts":
             data = request.data["data"]
             toppingsData = []

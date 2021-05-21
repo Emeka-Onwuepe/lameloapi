@@ -62,8 +62,11 @@ REST_KNOX = {
 }
 
 
+# CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000", "https://naughty-haibt-7d13bd.netlify.app",
+#                          "https://lamelofront.herokuapp.com","https://lamelo.com.ng","https://www.lamelo.com.ng","www.lamelo.com.ng"]
+
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000", "https://naughty-haibt-7d13bd.netlify.app",
-                         "https://lamelofront.herokuapp.com","https://lamelo.com.ng","https://www.lamelo.com.ng","www.lamelo.com.ng"]
+                         "https://lamelofront.herokuapp.com","https://lamelo.com.ng","https://www.lamelo.com.ng"]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
